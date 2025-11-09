@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer les dépendances système (y compris cython3)
+      # 2️⃣ Installer les dépendances système (cython3 est inclus)
       - name: Install system dependencies
         run: |
           sudo apt update
@@ -24,23 +24,10 @@ jobs:
       - name: Install Buildozer and Cython
         run: pip3 install buildozer==1.4.0 cython==0.29.37
 
-      # ⚡ CRITIQUE : Acceptation des licences Android
-      # Ceci est absolument nécessaire pour que le SDK manager puisse télécharger les outils.
-      - name: Accept Android SDK Licenses
-        run: |
-          # Crée les répertoires nécessaires pour Buildozer
-          mkdir -p $HOME/.buildozer/android/platform/android-sdk/licenses
-          
-          # Force l'acceptation des licences Android en simulant l'interaction utilisateur.
-          yes | $HOME/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses || true
-          
-          # Cette ligne est souvent suffisante si la précédente échoue
-          (yes | buildozer android update) || true
-
-      # 4️⃣ Compiler l’APK (debug)
-      - name: Build APK (This takes a long time for the first run)
-        # Buildozer va maintenant trouver les licences acceptées et démarrer la compilation
-        run: buildozer android debug
+      # 4️⃣ Compiler l’APK (debug) et ACCEPTER LES LICENCES
+      # Nous utilisons "yes |" pour forcer la réponse 'y' aux invites de licence
+      - name: Build APK (Accepting Licenses)
+        run: yes | buildozer android debug
 
       # 5️⃣ Télécharger l’APK compilé
       - name: Upload APK
