@@ -9,9 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # 1️⃣ Récupérer le code
+      # 1️⃣ Récupérer le code (CORRIGÉ : actions/checkout)
       - name: Checkout repository
-        uses: uses/checkout@v3
+        uses: actions/checkout@v3
 
       # 2️⃣ Installer les dépendances système (Ajout de 'patch' pour les anciennes versions de P4A)
       - name: Install system dependencies
@@ -31,9 +31,9 @@ jobs:
       - name: Build APK (Accepting Licenses)
         run: yes | buildozer android debug
 
-      # 5️⃣ Télécharger l’APK compilé
+      # 5️⃣ Télécharger l’APK compilé (CORRIGÉ : actions/upload-artifact)
       - name: Upload APK
-        uses: uses/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: apk-debug
           path: bin/*.apk
