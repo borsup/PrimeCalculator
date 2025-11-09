@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-    # Utiliser un environnement standard récent
     runs-on: ubuntu-latest
     
     steps:
@@ -14,20 +13,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer les dépendances système nécessaires pour l'environnement Android
-      - name: Install buildozer dependencies
+      # 2️⃣ Installer les dépendances système (y compris celles pour Kivy/Android)
+      - name: Install system dependencies
         run: |
           sudo apt update
+          # Ajout de cython ici, même si on l'installe via pip après, pour s'assurer qu'il est disponible au niveau du système
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
-            git zip libncurses6 libffi-dev libssl-dev default-jdk
+            git zip libncurses6 libffi-dev libssl-dev default-jdk cython
 
-      # 3️⃣ Installer Buildozer et les dépendances Python essentielles (CORRIGÉ)
-      - name: Install Buildozer and Python Dependencies
-        # Ajout explicite de cython, setuptools, et wheel.
-        run: pip3 install buildozer==1.4.0 cython==0.29.37 setuptools wheel
+      # 3️⃣ Installer Buildozer et les dépendances Python essentielles (Optimisé)
+      # On force l'installation de la version spécifique de Cython pour Kivy/Buildozer.
+      - name: Install Buildozer and Cython
+        run: pip3 install buildozer==1.4.0 cython==0.29.37
 
       # 4️⃣ Compiler l’APK (debug)
       - name: Build APK (This takes a long time for the first run)
+        # Ajout du paramètre --global-config pour forcer Buildozer à utiliser la config du système si le PATH est cassé
         run: buildozer android debug
 
       # 5️⃣ Télécharger l’APK compilé
