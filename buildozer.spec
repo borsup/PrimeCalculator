@@ -9,6 +9,8 @@ package.name = MetalCalculator
 # (str) Package domain (reverse domain style)
 package.domain = com.borsup
 
+source.dir = .
+
 # (list) Source code extensions to include
 source.include_exts = py,png,jpg,kv,atlas
 
