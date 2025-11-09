@@ -1,31 +1,35 @@
 name: Build APK (Buildozer)
 
 on:
+  # Permet d'exécuter manuellement le workflow depuis l'interface GitHub
   workflow_dispatch:
 
 jobs:
   build:
+    # Utiliser un environnement standard récent
     runs-on: ubuntu-latest
-
+    
     steps:
-      # 1️⃣ Récupérer le code
+      # Récupérer le code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer les dépendances système
+      # Installer les dépendances système nécessaires pour l'environnement Android
       - name: Install buildozer dependencies
         run: |
           sudo apt update
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
             git zip libncurses6 libffi-dev libssl-dev default-jdk
 
-      # 3️⃣ Installer Buildozer version stable disponible
+      # Installer Buildozer
       - name: Install Buildozer
+        # Utilisation d'une version stable connue pour éviter les problèmes de dépendances
         run: pip3 install buildozer==1.4.0
 
-      # 4️⃣ Compiler l’APK (debug)
-      - name: Build APK
-        run: buildozer -v -f $GITHUB_WORKSPACE/buildozer.spec android debug
+      # Compiler l’APK (debug)
+      # Simplicité : Buildozer trouve buildozer.spec dans le répertoire courant
+      - name: Build APK (This takes a long time for the first run)
+        run: buildozer android debug
 
       # 5️⃣ Télécharger l’APK compilé
       - name: Upload APK
