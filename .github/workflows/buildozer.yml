@@ -11,29 +11,29 @@ jobs:
     steps:
       # 1️⃣ Récupérer le code
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: uses/checkout@v3
 
-      # 2️⃣ Installer les dépendances système (Ajout de Libtool, Automake et Build-essential)
+      # 2️⃣ Installer les dépendances système (Ajout de 'patch' pour les anciennes versions de P4A)
       - name: Install system dependencies
         run: |
           sudo apt update
-          # Ajout de build-essential, libtool, automake pour résoudre les erreurs de compilation libffi
+          # Installation des outils de construction pour libffi + 'patch'
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
             git zip libncurses6 libffi-dev libssl-dev default-jdk cython3 \
-            build-essential libtool automake
+            build-essential libtool automake patch
 
       # 3️⃣ Installer Buildozer et les dépendances Python essentielles 
-      - name: Install Buildozer and Cython
-        run: pip3 install buildozer==1.4.0 cython==0.29.37
+      # On force Buildozer à la version 1.3.0 pour contourner les bugs de compilation libffi/P4A.
+      - name: Install Buildozer and Cython (Fixed Version)
+        run: pip3 install buildozer==1.3.0 cython==0.29.37
 
       # 4️⃣ Compiler l’APK (debug) et ACCEPTER LES LICENCES
-      # 'yes |' est critique pour répondre 'y' aux invites de licence
       - name: Build APK (Accepting Licenses)
         run: yes | buildozer android debug
 
       # 5️⃣ Télécharger l’APK compilé
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: uses/upload-artifact@v4
         with:
           name: apk-debug
           path: bin/*.apk
