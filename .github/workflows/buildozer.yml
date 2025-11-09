@@ -8,21 +8,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Récupérer le code
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Installer les dépendances système
       - name: Install buildozer dependencies
         run: |
           sudo apt update
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
             git zip libncurses6 libffi-dev libssl-dev default-jdk
 
+      # 3️⃣ Installer Buildozer version stable
       - name: Install Buildozer
-        run: pip3 install --upgrade buildozer
+        run: pip3 install buildozer==1.4.2
 
+      # 4️⃣ Compiler l’APK (debug)
       - name: Build APK
         run: buildozer -v -f $GITHUB_WORKSPACE/buildozer.spec android debug
 
+      # 5️⃣ Télécharger l’APK compilé
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
