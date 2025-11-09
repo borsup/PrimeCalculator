@@ -9,10 +9,10 @@ package.name = MetalCalculator
 # (str) Package domain (reverse domain style)
 package.domain = com.borsup
 
-# (str) Source code where the main.py live
+# (list) Source code extensions to include
 source.include_exts = py,png,jpg,kv,atlas
 
-# (str) Application versioning (method 1)
+# (str) Application version
 version = 1.0
 
 # (list) Application requirements
@@ -24,10 +24,11 @@ icon.filename = icon.png
 # (str) Supported orientation (portrait, landscape or all)
 orientation = portrait
 
-# (str) Android entry point, default is ok
-# entrypoint = org.kivy.android.PythonActivity
+# (list) Permissions
+android.permissions = INTERNET
 
-[buildozer]
+# (bool) Private storage for app
+android.private_storage = True
 
 # (int) Target Android API
 android.api = 33
@@ -43,15 +44,3 @@ android.ndk = 25b
 
 # (int) Android NDK API
 android.ndk_api = 21
-
-# (bool) Use --private data storage (True) or --dir (False)
-android.private_storage = True
-
-# (bool) Presplash screen
-# presplash.filename = %(source.dir)s/data/presplash.png
-
-# (bool) Orientation
-# android.orientation = portrait
-
-# (list) Permissions
-android.permissions = INTERNET
