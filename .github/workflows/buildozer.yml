@@ -1,5 +1,6 @@
-name: Build APK
+name: Build APK (Buildozer)
 
+# Permet de lancer manuellement le workflow
 on:
   workflow_dispatch:
 
@@ -8,17 +9,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Récupérer le code de ton repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Installer les dépendances nécessaires à Buildozer
       - name: Install buildozer dependencies
         run: |
           sudo apt update
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
-            git zip libncurses5 libtinfo5 libffi-dev libssl-dev
+            git zip libncurses6 libffi-dev libssl-dev default-jdk
 
-      - name: Install buildozer
-        run: pip3 install buildozer
+      # 3️⃣ Installer Buildozer
+      - name: Install Buildozer
+        run: pip3 install --upgrade buildozer
 
+      # 4️⃣ Construire l’APK
       - name: Build APK
         run: buildozer android debug
+
+      # 5️⃣ Sauvegarder l’APK en tant qu’artefact pour téléchargement
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: apk-debug
+          path: bin/*.apk
