@@ -10,24 +10,23 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Récupérer le code
+      # 1️⃣ Récupérer le code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Installer les dépendances système nécessaires pour l'environnement Android
+      # 2️⃣ Installer les dépendances système nécessaires pour l'environnement Android
       - name: Install buildozer dependencies
         run: |
           sudo apt update
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
             git zip libncurses6 libffi-dev libssl-dev default-jdk
 
-      # Installer Buildozer
-      - name: Install Buildozer
-        # Utilisation d'une version stable connue pour éviter les problèmes de dépendances
-        run: pip3 install buildozer==1.4.0
+      # 3️⃣ Installer Buildozer et les dépendances Python essentielles (CORRIGÉ)
+      - name: Install Buildozer and Python Dependencies
+        # Ajout explicite de cython, setuptools, et wheel.
+        run: pip3 install buildozer==1.4.0 cython==0.29.37 setuptools wheel
 
-      # Compiler l’APK (debug)
-      # Simplicité : Buildozer trouve buildozer.spec dans le répertoire courant
+      # 4️⃣ Compiler l’APK (debug)
       - name: Build APK (This takes a long time for the first run)
         run: buildozer android debug
 
