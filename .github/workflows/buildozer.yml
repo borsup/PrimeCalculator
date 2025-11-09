@@ -13,22 +13,33 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer les dépendances système (y compris cython3 CORRIGÉ)
+      # 2️⃣ Installer les dépendances système (y compris cython3)
       - name: Install system dependencies
         run: |
           sudo apt update
-          # Utilisation de 'cython3' au lieu de 'cython' pour l'installation système
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
             git zip libncurses6 libffi-dev libssl-dev default-jdk cython3
 
       # 3️⃣ Installer Buildozer et les dépendances Python essentielles 
-      # On installe la version spécifique requise par Python for Android (P4A) via pip3.
       - name: Install Buildozer and Cython
         run: pip3 install buildozer==1.4.0 cython==0.29.37
 
+      # ⚡ CRITIQUE : Acceptation des licences Android
+      # Ceci est absolument nécessaire pour que le SDK manager puisse télécharger les outils.
+      - name: Accept Android SDK Licenses
+        run: |
+          # Crée les répertoires nécessaires pour Buildozer
+          mkdir -p $HOME/.buildozer/android/platform/android-sdk/licenses
+          
+          # Force l'acceptation des licences Android en simulant l'interaction utilisateur.
+          yes | $HOME/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager --licenses || true
+          
+          # Cette ligne est souvent suffisante si la précédente échoue
+          (yes | buildozer android update) || true
+
       # 4️⃣ Compiler l’APK (debug)
-      # La première exécution sera la plus longue (téléchargement du SDK Android)
       - name: Build APK (This takes a long time for the first run)
+        # Buildozer va maintenant trouver les licences acceptées et démarrer la compilation
         run: buildozer android debug
 
       # 5️⃣ Télécharger l’APK compilé
