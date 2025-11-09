@@ -19,9 +19,9 @@ jobs:
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
             git zip libncurses6 libffi-dev libssl-dev default-jdk
 
-      # 3️⃣ Installer Buildozer version stable
+      # 3️⃣ Installer Buildozer version stable disponible
       - name: Install Buildozer
-        run: pip3 install buildozer==1.4.2
+        run: pip3 install buildozer==1.4.0
 
       # 4️⃣ Compiler l’APK (debug)
       - name: Build APK
