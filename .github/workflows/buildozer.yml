@@ -13,19 +13,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer les dépendances système (cython3 est inclus)
+      # 2️⃣ Installer les dépendances système (Ajout de Libtool, Automake et Build-essential)
       - name: Install system dependencies
         run: |
           sudo apt update
+          # Ajout de build-essential, libtool, automake pour résoudre les erreurs de compilation libffi
           sudo apt install -y python3-pip python3-setuptools python3-wheel \
-            git zip libncurses6 libffi-dev libssl-dev default-jdk cython3
+            git zip libncurses6 libffi-dev libssl-dev default-jdk cython3 \
+            build-essential libtool automake
 
       # 3️⃣ Installer Buildozer et les dépendances Python essentielles 
       - name: Install Buildozer and Cython
         run: pip3 install buildozer==1.4.0 cython==0.29.37
 
       # 4️⃣ Compiler l’APK (debug) et ACCEPTER LES LICENCES
-      # Nous utilisons "yes |" pour forcer la réponse 'y' aux invites de licence
+      # 'yes |' est critique pour répondre 'y' aux invites de licence
       - name: Build APK (Accepting Licenses)
         run: yes | buildozer android debug
 
