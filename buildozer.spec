@@ -9,9 +9,6 @@ package.name = MetalCalculator
 # (str) Package domain (reverse domain style)
 package.domain = com.borsup
 
-# (str) Directory of your main.py
-source.dir = .
-
 # (str) Source code where the main.py live
 source.include_exts = py,png,jpg,kv,atlas
 
