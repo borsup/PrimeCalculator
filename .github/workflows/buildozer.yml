@@ -26,15 +26,15 @@ jobs:
       - name: Install Buildozer and Cython (Fixed Version)
         run: pip3 install buildozer==1.3.0 cython==0.29.37
 
-      # 4️⃣ Compiler l’APK (debug) en forçant l'utilisation du NDK préinstallé
-      # Ceci contourne l'échec de téléchargement "read of closed file".
+      # 4️⃣ Compiler l’APK (debug) en forçant l'utilisation des SDK/NDK préinstallés
       - name: Build APK (Bypass Downloads)
         env:
-          # Force Buildozer/P4A à utiliser l'NDK déjà présent sur le runner (NDK_HOME)
-          # Le variable env.ANDROID_NDK contient le chemin d'accès.
-          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK }}
-          # Accepte les licences pour éviter l'invite
+          # Variable pour accepter automatiquement toutes les licences
           YES_I_ACCEPT_THE_ANDROID_LICENSES: 1
+          # FORCER Buildozer à utiliser le SDK préinstallé du runner
+          ANDROIDSDK: ${{ env.ANDROID_SDK_ROOT }}
+          # FORCER Buildozer à utiliser l'NDK préinstallé du runner
+          ANDROIDNDK: ${{ env.ANDROID_NDK_LATEST_HOME }}
         run: buildozer android debug
 
       # 5️⃣ Télécharger l’APK compilé
